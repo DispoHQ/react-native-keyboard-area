@@ -28,20 +28,22 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "@types/react-native": "0.62.16"
+    "react": "18.2.0",
+    "react-native": "0.71.4"
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "2.0.0",
+    "@types/react": "^18.0.28",
     "@typescript-eslint/eslint-plugin": "3.5.0",
     "@typescript-eslint/parser": "3.5.0",
     "cz-conventional-changelog": "3.2.0",
     "eslint": "7.3.1",
     "semantic-release": "17.2.3",
-    "typescript": "3.9.6"
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "react": ">=16.0.0",
-    "react-native": ">=0.59.5"
+    "react": "18.2.0",
+    "react-native": "0.71.4"
   },
   "config": {
     "commitizen": {

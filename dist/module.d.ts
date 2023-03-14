@@ -1,8 +1,9 @@
+import { EmitterSubscription } from 'react-native';
 /**
  * Native Event name, emitted from Android and iOS
  */
 export declare const KEYBOARD_SIZE_EVENT_NAME = "KeyboardSizeChanges";
-export declare type keyboardListenerCallback = (height: number) => void;
+export type keyboardListenerCallback = (height: number) => void;
 export declare enum SoftInputMode {
     SOFT_INPUT_ADJUST_NOTHING = "SOFT_INPUT_ADJUST_NOTHING",
     SOFT_INPUT_ADJUST_PAN = "SOFT_INPUT_ADJUST_PAN",
@@ -20,7 +21,7 @@ export declare enum SoftInputMode {
     SOFT_INPUT_STATE_VISIBLE = "SOFT_INPUT_STATE_VISIBLE"
 }
 export declare class RNKeyboard {
-    static isInitialized: boolean;
+    static unsubscribe: EmitterSubscription | null;
     static callbacks: keyboardListenerCallback[];
     /**
      * This is private method handling the native event listener logic

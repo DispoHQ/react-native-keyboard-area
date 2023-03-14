@@ -9,6 +9,24 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 class RNKeyboardModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     private var keyboardProvider: KeyboardProvider? = null
 
+    private var listenerCount = 0
+    
+    @ReactMethod
+    fun addListener(eventName: String) {
+        if (listenerCount == 0) {
+            // Set up any upstream listeners or background tasks as necessary
+        }
+        listenerCount += 1
+    }
+
+    @ReactMethod
+    fun removeListeners(count: Int) {
+        listenerCount -= count
+        if (listenerCount == 0) {
+            // Remove upstream listeners, stop unnecessary background tasks
+        }
+    }
+
     @ReactMethod
     fun setWindowSoftInputMode(mode: Int, promise: Promise) {
         try {

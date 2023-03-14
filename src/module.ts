@@ -3,6 +3,7 @@ import {
   NativeModules,
   NativeEventEmitter,
   Platform,
+  EmitterSubscription,
 } from 'react-native';
 
 const { RNKeyboard: KBModule } = NativeModules;
@@ -51,7 +52,7 @@ export enum SoftInputMode {
 }
 
 export class RNKeyboard {
-  static isInitialized = false;
+  static unsubscribe: EmitterSubscription | null = null;
   static callbacks: keyboardListenerCallback[] = [];
 
   /**
@@ -62,7 +63,7 @@ export class RNKeyboard {
   private static keyboardListener(height: number) {
     const keyboardHeight =
       Platform.OS === 'android' ? height / PixelRatio.get() : height;
-    RNKeyboard.callbacks.forEach(callback => {
+    RNKeyboard.callbacks.forEach((callback) => {
       callback(keyboardHeight);
     });
   }
@@ -82,14 +83,12 @@ export class RNKeyboard {
    * @param callback Callback that will be invoked with the current keyboard height
    */
   static addKeyboardListener(callback: keyboardListenerCallback) {
-    if (!RNKeyboard.isInitialized) {
+    if (RNKeyboard.unsubscribe === null) {
       KBModule.startKeyboardListener();
-      eventEmitter.addListener(
+      RNKeyboard.unsubscribe = eventEmitter.addListener(
         KEYBOARD_SIZE_EVENT_NAME,
         RNKeyboard.keyboardListener,
       );
-
-      RNKeyboard.isInitialized = true;
     }
     RNKeyboard.callbacks.push(callback);
   }
@@ -99,6 +98,12 @@ export class RNKeyboard {
    * @param callback Callback to remove
    */
   static removeKeyboardListener(callback: keyboardListenerCallback) {
-    RNKeyboard.callbacks = RNKeyboard.callbacks.filter(cb => cb !== callback);
+    RNKeyboard.callbacks = RNKeyboard.callbacks.filter((cb) => cb !== callback);
+    if (RNKeyboard.callbacks.length === 0) {
+      if (RNKeyboard.unsubscribe !== null) {
+        RNKeyboard.unsubscribe.remove();
+        RNKeyboard.unsubscribe = null;
+      }
+    }
   }
 }

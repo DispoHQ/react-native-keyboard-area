@@ -46,7 +46,7 @@ export class RNKeyboard {
      */
     static keyboardListener(height) {
         const keyboardHeight = Platform.OS === 'android' ? height / PixelRatio.get() : height;
-        RNKeyboard.callbacks.forEach(callback => {
+        RNKeyboard.callbacks.forEach((callback) => {
             callback(keyboardHeight);
         });
     }
@@ -64,10 +64,9 @@ export class RNKeyboard {
      * @param callback Callback that will be invoked with the current keyboard height
      */
     static addKeyboardListener(callback) {
-        if (!RNKeyboard.isInitialized) {
+        if (RNKeyboard.unsubscribe === null) {
             KBModule.startKeyboardListener();
-            eventEmitter.addListener(KEYBOARD_SIZE_EVENT_NAME, RNKeyboard.keyboardListener);
-            RNKeyboard.isInitialized = true;
+            RNKeyboard.unsubscribe = eventEmitter.addListener(KEYBOARD_SIZE_EVENT_NAME, RNKeyboard.keyboardListener);
         }
         RNKeyboard.callbacks.push(callback);
     }
@@ -76,9 +75,14 @@ export class RNKeyboard {
      * @param callback Callback to remove
      */
     static removeKeyboardListener(callback) {
-        RNKeyboard.callbacks = RNKeyboard.callbacks.filter(cb => cb !== callback);
-        RNKeyboard.isInitialized = false;
+        RNKeyboard.callbacks = RNKeyboard.callbacks.filter((cb) => cb !== callback);
+        if (RNKeyboard.callbacks.length === 0) {
+            if (RNKeyboard.unsubscribe !== null) {
+                RNKeyboard.unsubscribe.remove();
+                RNKeyboard.unsubscribe = null;
+            }
+        }
     }
 }
-RNKeyboard.isInitialized = false;
+RNKeyboard.unsubscribe = null;
 RNKeyboard.callbacks = [];

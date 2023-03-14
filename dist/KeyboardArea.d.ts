@@ -28,7 +28,7 @@ interface IProps {
      */
     onChange?: (isOpen: boolean, height: number) => void;
 }
-export declare type KeyboardAreaRef = {
+export type KeyboardAreaRef = {
     isOpen: () => boolean;
     open: () => void;
     close: () => void;
