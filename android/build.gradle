@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : '1.6.0'
+        kotlinVersion = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : '1.6.20'
         androidToolsVersion = '3.2.1'
     }
 
